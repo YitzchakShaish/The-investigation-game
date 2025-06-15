@@ -44,14 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\ISensors.cs" />
-
     <Compile Include="Models\IranianAgents\AgentBase.cs" />
     <Compile Include="Models\IranianAgents\JuniorAgent.cs" />
     <Compile Include="Models\Sensors\AudioSensor.cs" />
     <Compile Include="Models\Sensors\SensorType.cs" />
     <Compile Include="Models\Sensors\ThermalSensor.cs" />
-
-    <Compile Include="InvestigationManager.cs" />
 
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

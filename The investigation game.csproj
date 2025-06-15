@@ -52,7 +52,6 @@
     <Compile Include="Models\Sensors\ThermalSensor.cs" />
 
     <Compile Include="InvestigationManager.cs" />
- feature/add-investigation-manager
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

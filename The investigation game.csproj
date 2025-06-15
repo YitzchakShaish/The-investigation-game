@@ -43,17 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IIranianAgents.cs" />
     <Compile Include="Interfaces\ISensors.cs" />
+    <Compile Include="Models\IranianAgents\AgentBase.cs" />
+    <Compile Include="Models\IranianAgents\JuniorAgent.cs" />
+    <Compile Include="Models\Sensors\AudioSensor.cs" />
+    <Compile Include="Models\Sensors\SensorType.cs" />
+    <Compile Include="Models\Sensors\ThermalSensor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\IranianAgents\" />
-    <Folder Include="Models\Sensors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

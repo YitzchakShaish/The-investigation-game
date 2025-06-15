@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IIranianAgents.cs" />
     <Compile Include="Interfaces\ISensors.cs" />
+    <Compile Include="InvestigationManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

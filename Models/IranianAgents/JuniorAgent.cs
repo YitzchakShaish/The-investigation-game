@@ -7,43 +7,45 @@ using System.Text;
 using System.Threading.Tasks;
 using The_investigation_game.Interfaces;
 using The_investigation_game.Models.Sensors;
+using The_investigation_game.Services;
 
 namespace The_investigation_game.Models.IranianAgents
 {
     internal class JuniorAgent : AgentBase
     {
-        protected override int MaxSecretWeaknesses { get; set; } = 2;
-        protected override List<SensorType> SecretWeaknesses { get; set; } = new List<SensorType>();
-        protected override List<ISensors> AttachedSensors { get; set; } = new List<ISensors>();
+        public  string Name { get; set; }
 
+        public override int MaxSecretWeaknesses { get; set; } = 2;
+        protected override List<SensorType> SecretWeaknesses { get; set; } 
+        protected override List<ISensors> AttachedSensors { get; set; } 
+
+        public JuniorAgent(string name)
+        {
+            Name = name;
+            List<SensorType> SecretWeaknessesOptions = new List<SensorType> { SensorType.Audio, SensorType.Thermal};
+            SecretWeaknesses = new List<SensorType>() { SecretWeaknessesOptions[RandomGenerator.GetRandomNumber(MaxSecretWeaknesses)], SecretWeaknessesOptions[RandomGenerator.GetRandomNumber(MaxSecretWeaknesses)] };
+            AttachedSensors = new List<ISensors>() ;
+
+        }
         public override void AddAttachedSensors(ISensors sensor, int index = -1)
         {
-            if (index == -1)
+            if (index >= 0 && index < AttachedSensors.Count)
             {
-                if (AttachedSensors.Count() < MaxSecretWeaknesses)
-                {
-                    AttachedSensors.Add(sensor);
-                }
-                else
-                {
-                    Console.WriteLine("List is full, cannot add sensor.");
-                }
+                
+                AttachedSensors[index] = sensor;
+                Console.WriteLine($"Sensor at index {index} was replaced.");
             }
-            else if (index >= 0 && index <= AttachedSensors.Count)
+            else if (index == AttachedSensors.Count && AttachedSensors.Count < MaxSecretWeaknesses)
             {
-                if (AttachedSensors.Count() < MaxSecretWeaknesses)
-                {
-                    AttachedSensors.Insert(index, sensor);
-                }
-                else
-                {
-                    Console.WriteLine("List is full, cannot insert sensor at index.");
-                }
+                
+                AttachedSensors.Add(sensor);
+                Console.WriteLine($"Sensor was added at index {index}.");
             }
             else
             {
-                Console.WriteLine("Invalid index, cannot add sensor.");
+                Console.WriteLine("Invalid index, or list is full.");
             }
+
         }
 
 
@@ -70,6 +72,7 @@ namespace The_investigation_game.Models.IranianAgents
                 {
                     if (AttachedSensors[i].Type == copySecretWeaknesses[j])
                     {
+                        AttachedSensors[i].Activate();
                         copySecretWeaknesses.Remove(copySecretWeaknesses[j]);
                         counter++;
                         continue;

@@ -8,5 +8,6 @@ namespace The_investigation_game
 {
     internal class InvestigationManager
     {
-    }
+        JuniorAgent achmad = new JuniorAgent();
+        
 }

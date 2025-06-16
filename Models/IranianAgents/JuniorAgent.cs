@@ -6,56 +6,78 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using The_investigation_game.Interfaces;
+using The_investigation_game.Models.Sensors;
 
 namespace The_investigation_game.Models.IranianAgents
 {
     internal class JuniorAgent : AgentBase
     {
         protected override int MaxSecretWeaknesses { get; set; } = 2;
-        protected override List<ISensors> SecretWeaknesses { get; set; } = new List<ISensors>();
-        protected override List<ISensors> AttachedSensors { get; set; }
+        protected override List<SensorType> SecretWeaknesses { get; set; } = new List<SensorType>();
+        protected override List<ISensors> AttachedSensors { get; set; } = new List<ISensors>();
 
         public override void AddAttachedSensors(ISensors sensor, int index = -1)
         {
-            if (index == -1 && AttachedSensors.Count() < MaxSecretWeaknesses)
+            if (index == -1)
             {
-                AttachedSensors.Add(sensor);
+                if (AttachedSensors.Count() < MaxSecretWeaknesses)
+                {
+                    AttachedSensors.Add(sensor);
+                }
+                else
+                {
+                    Console.WriteLine("List is full, cannot add sensor.");
+                }
             }
             else if (index >= 0 && index <= AttachedSensors.Count)
             {
-                AttachedSensors.Insert(index, sensor);
+                if (AttachedSensors.Count() < MaxSecretWeaknesses)
+                {
+                    AttachedSensors.Insert(index, sensor);
+                }
+                else
+                {
+                    Console.WriteLine("List is full, cannot insert sensor at index.");
+                }
             }
             else
             {
-                Console.WriteLine("Invalid index / list is full, cannot be added.!");
+                Console.WriteLine("Invalid index, cannot add sensor.");
             }
-
         }
 
-        public override void AddSecretWeakness(ISensors sensor)
+
+        public override void AddSecretWeakness(SensorType weakness)
         {
             if (SecretWeaknesses.Count() < MaxSecretWeaknesses)
             {
-                SecretWeaknesses.Add(sensor);
+                SecretWeaknesses.Add(weakness);
+            }
+            else
+            {
+                Console.WriteLine("List is full, cannot insert sensor at index.");
             }
         }
 
         public override void GetDetectionAccuracy()
         {
+
+            var copySecretWeaknesses = new List<SensorType>(SecretWeaknesses);
             int counter = 0;
-            for (int i = 0; i > MaxSecretWeaknesses; i++)
+            for (int i = 0; i < AttachedSensors.Count(); i++)
             {
-                for (int j = 0; j > MaxSecretWeaknesses; j++)
+                for (int j = 0; j < copySecretWeaknesses.Count(); j++)
                 {
-                    if (AttachedSensors[j] == SecretWeaknesses[i])
+                    if (AttachedSensors[i].Type == copySecretWeaknesses[j])
                     {
-                        SecretWeaknesses.Remove(SecretWeaknesses[i]);
+                        copySecretWeaknesses.Remove(copySecretWeaknesses[j]);
                         counter++;
                         continue;
                     }
                 }
             }
-            Console.WriteLine($"Detected agent: {MaxSecretWeaknesses- SecretWeaknesses.Count()} out of {MaxSecretWeaknesses} sensors.");
+            Console.WriteLine($"Detected agent: {SecretWeaknesses.Count() - copySecretWeaknesses.Count()} out of {SecretWeaknesses.Count()} sensors.");
         }
     }
-}
+    }
+

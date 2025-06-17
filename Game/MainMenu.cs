@@ -105,9 +105,9 @@ namespace The_investigation_game.Game
 
         private static void PrintHeader(string title)
         {
-            Console.WriteLine(new string('═', 50));
+            Console.WriteLine(new string('~', 40));
             Console.WriteLine($"            {title}");
-            Console.WriteLine(new string('═', 50));
+            Console.WriteLine(new string('~', 40));
         }
         private static ISensors CreateSensor()
         {

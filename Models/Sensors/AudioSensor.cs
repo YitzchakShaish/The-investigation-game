@@ -9,12 +9,12 @@ namespace The_investigation_game.Models.Sensors
 {
     internal class AudioSensor : ISensors
     {
-        public string Name { get; set; }
-        public SensorType Type { get; set; } = SensorType.Audio;
+        
+        public SensorType Type { get;  } = SensorType.Audio;
 
         public void Activate()
         {
-            Console.WriteLine($"The {Type} sensor with name '{Name}' is activated.");
+            Console.WriteLine($"The {Type} sensor with name  is activated.");
         }
     }
 }

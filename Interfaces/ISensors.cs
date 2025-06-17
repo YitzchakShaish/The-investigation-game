@@ -9,8 +9,8 @@ namespace The_investigation_game.Interfaces
 {
     internal interface ISensors
     {
-        string Name { get; set; }
-        SensorType Type { get; set; }
+       
+        SensorType Type { get;  }
         void Activate();
     }
 }

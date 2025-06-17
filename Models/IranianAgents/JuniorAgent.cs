@@ -14,21 +14,30 @@ namespace The_investigation_game.Models.IranianAgents
     internal class JuniorAgent : AgentBase
     {
         public  string Name { get; set; }
+        public TerrorGroup TerrorAffiliation { get; set; }
 
-        public override int MaxSecretWeaknesses { get; set; } = 2;
+
+        public override int MaxSecretWeaknesses { get;  } = 2;
         protected override List<SensorType> SecretWeaknesses { get; set; } 
         protected override List<ISensors> AttachedSensors { get; set; } 
 
         public JuniorAgent(string name)
         {
             Name = name;
-            List<SensorType> SecretWeaknessesOptions = new List<SensorType> { SensorType.Audio, SensorType.Thermal};
+
+            TerrorGroup[] TerrorAffiliationOptions = (TerrorGroup[])Enum.GetValues(typeof(TerrorGroup));
+            TerrorAffiliation = (TerrorGroup)TerrorAffiliationOptions.GetValue(RandomGenerator.GetRandomNumber(TerrorAffiliationOptions.Length));
+
+            SensorType[] SecretWeaknessesOptions = (SensorType[])Enum.GetValues(typeof(SensorType));
+                  
+
             SecretWeaknesses = new List<SensorType>() { SecretWeaknessesOptions[RandomGenerator.GetRandomNumber(MaxSecretWeaknesses)], SecretWeaknessesOptions[RandomGenerator.GetRandomNumber(MaxSecretWeaknesses)] };
             AttachedSensors = new List<ISensors>() ;
 
         }
         public override void AddAttachedSensors(ISensors sensor, int index = -1)
         {
+            //TODO: if -1, ללא הכנסת אינדקס יבצע הוספה
             if (index >= 0 && index < AttachedSensors.Count)
             {
                 
@@ -81,6 +90,16 @@ namespace The_investigation_game.Models.IranianAgents
             }
             Console.WriteLine($"Detected agent: {SecretWeaknesses.Count() - copySecretWeaknesses.Count()} out of {SecretWeaknesses.Count()} sensors.");
         }
+
+        public string GetRandomWeakness()
+        {
+            if (SecretWeaknesses.Count == 0)
+                return "No weakness assigned.";
+            int index = RandomGenerator.GetRandomNumber(SecretWeaknesses.Count);
+            return SecretWeaknesses[index].ToString();
+        }
+
+        
     }
-    }
+}
 

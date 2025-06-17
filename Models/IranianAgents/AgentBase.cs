@@ -14,7 +14,7 @@ namespace The_investigation_game.Models.IranianAgents
         public string Name { get; set; }
         protected abstract List<SensorType> SecretWeaknesses { get; set; }
         protected abstract List<ISensors> AttachedSensors { get; set; }
-        public abstract int MaxSecretWeaknesses { get; set; }
+        public abstract int MaxSecretWeaknesses { get;  }
         public abstract void AddSecretWeakness(SensorType weakness);
         public abstract void AddAttachedSensors(ISensors sensor, int index);
         public abstract void GetDetectionAccuracy();

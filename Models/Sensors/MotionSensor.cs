@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using The_investigation_game.Interfaces;
+using The_investigation_game.Models.IranianAgents;
 
 namespace The_investigation_game.Models.Sensors
 {
@@ -31,6 +32,16 @@ namespace The_investigation_game.Models.Sensors
                     Console.WriteLine($"The {Type} sensor  is activated. Activations left: {ActivationsLeft}");
                 }
             }
+        }
+        public bool CheckBreakCondition()
+        {
+            if (IsBroken)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Motion sensor broke and removed itself.");
+                Console.ResetColor();
+            }
+            return IsBroken;
         }
     }
 }

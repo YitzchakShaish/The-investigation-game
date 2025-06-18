@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\MainMenu.cs" />
+    <Compile Include="Game\GameUI.cs" />
     <Compile Include="Interfaces\IBreakableSensor.cs" />
     <Compile Include="Interfaces\ICounterattacker.cs" />
     <Compile Include="Interfaces\IRevealerSensor.cs" />

@@ -10,43 +10,64 @@ using The_investigation_game.Services;
 namespace The_investigation_game.Models.IranianAgents
 {
 
-    internal class SquadLeader : JuniorAgent, ICounterattacker
+    internal class SquadLeader : AgentBase, ICounterattacker
     {
-        public override int MaxSecretWeaknesses { get;  } = 4;
 
-        public SquadLeader(string name) : base(name)
+        public SquadLeader(string name, int maxSecretWeaknesses = 4) : base(name, maxSecretWeaknesses)
         {
+            Console.WriteLine($"create SquadLeader agent {MaxSecretWeaknesses}");
         }
+
+
+
         protected int counterattackThreshold = 3;
         protected int detectionCallCount = 0;
 
 
 
-        public override void GetDetectionAccuracy()
+        public override List<ISensors> GetDetectionAccuracy()
         {
+            Console.WriteLine("SquadLeader version");
+
             if (detectionCallCount == counterattackThreshold)
             {
                 Counterattack();
             }
-            detectionCallCount++;
-
+            ++detectionCallCount;
 
             var copySecretWeaknesses = new List<SensorType>(SecretWeaknesses);
-            int counter = 0;
-            for (int i = 0; i < AttachedSensors.Count; i++)
+            List<ISensors> detectedSensors = new List<ISensors>();
+
+            for (int i = AttachedSensors.Count - 1; i >= 0; i--)
             {
+                AttachedSensors[i].Activate();
                 for (int j = 0; j < copySecretWeaknesses.Count; j++)
                 {
+                    if (AttachedSensors[i] is IBreakableSensor breakableSensor && breakableSensor.CheckBreakCondition())
+                    {
+                        AttachedSensors.RemoveAt(i);
+                        break;
+                    }
+
                     if (AttachedSensors[i].Type == copySecretWeaknesses[j])
                     {
-                        AttachedSensors[i].Activate();
-                        copySecretWeaknesses.Remove(copySecretWeaknesses[j]);
-                        counter++;
+                        detectedSensors.Add(AttachedSensors[i]);
+                        copySecretWeaknesses.RemoveAt(j);
                         break;
                     }
                 }
             }
-            Console.WriteLine($"Detected agent: {SecretWeaknesses.Count - copySecretWeaknesses.Count} out of {SecretWeaknesses.Count} sensors.");
+            if (copySecretWeaknesses.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("All weaknesses detected! You win!");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine($"secretWeaknesses{SecretWeaknesses.Count()} copySecretWeaknesses: {copySecretWeaknesses.Count()} secretWeaknesses: {SecretWeaknesses.Count()} .");
+
+            Console.WriteLine($"Detected agent: {SecretWeaknesses.Count() - copySecretWeaknesses.Count()} out of {SecretWeaknesses.Count()} sensors.");
+            return detectedSensors;
         }
 
         public void Counterattack()

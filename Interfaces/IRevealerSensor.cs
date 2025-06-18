@@ -9,7 +9,7 @@ namespace The_investigation_game.Interfaces
 {
     internal interface IRevealerSensor
     {
-        string Reveal(JuniorAgent agent);
+        string Reveal(AgentBase agent);
         
     }
 }

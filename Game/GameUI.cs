@@ -10,25 +10,25 @@ using The_investigation_game.Models.Sensors;
 
 namespace The_investigation_game.Game
 {
-    internal static class MainMenu
+    internal static class GameUI
     {
         public static void Show()
         {
             bool isRunning = true;
-            JuniorAgent currentAgent = null;
+            AgentBase currentAgent = null;
             while (isRunning)
             {
                 Console.Clear();
-                Console.Title = "Welcome to the investigation game.";
+                Console.Title = "Welcome to the investigation game!.";
                 Console.ForegroundColor = ConsoleColor.Cyan;
 
                 PrintHeader("Game menu");
 
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Welcome to the Intelligence Simulation Game!");
-                Console.WriteLine("Please select an action:");
-                Console.WriteLine("1 - Create a new agent");
-                Console.WriteLine("2 - Attach a sensor to agent");
+                Console.WriteLine("Please select an action: (0-2)");
+                Console.WriteLine("1. Create a new agent");
+                Console.WriteLine("2. Attach a sensor to agent");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Your choice: ");
@@ -50,33 +50,12 @@ namespace The_investigation_game.Game
                         else
                         {
                             ISensors sensor = CreateSensor();
-
-                            int index;
-                            while (true) 
-                            {
-                                Console.WriteLine($"Enter your index: min = 0 max = {currentAgent.MaxSecretWeaknesses-1}");
-                                string inputi = Console.ReadLine();
-
-                                if (!int.TryParse(inputi, out index))
-                                {
-                                    Console.WriteLine("Invalid input. Must be a number.");
-                                    continue; 
-                                }
-
-                                if (index < 0 || index > currentAgent.MaxSecretWeaknesses)
-                                {
-                                    Console.WriteLine($"Invalid input. Must be between 0 and {currentAgent.MaxSecretWeaknesses}.");
-                                    continue; 
-                                }
-
-                                break; 
-                            }
-
-                            Console.WriteLine($"DEBUG BEFORE: index to send = {index}");
-
-                            currentAgent.AddAttachedSensors(sensor, index);
+                            currentAgent.AddAttachedSensors(sensor);
                             Console.WriteLine("Sensor attached.");
-                            currentAgent.GetDetectionAccuracy();
+                            List<ISensors> detectedSensors = InvestigationManager.EvaluateAgent(currentAgent);
+                            InvestigationManager.ActivateAllSensors(detectedSensors, currentAgent);
+                            InvestigationManager.ActivateAdvancedAgentAbilities(currentAgent);
+                           // currentAgent.GetDetectionAccuracy();
                         }
                         Console.WriteLine("\nPress any key to continue...");
                         Console.ReadKey();
@@ -112,8 +91,7 @@ namespace The_investigation_game.Game
         private static ISensors CreateSensor()
         {
             Console.WriteLine("Please choose a sensor:");
-            Console.WriteLine("1 - Audio Sensor");
-            Console.WriteLine("2 - Thermal Sensor");
+            Console.WriteLine("\n1. Audio\n2. Thermal\n3. Pulse\n4. Motion\n5. Magnetic\n6. Signal\n7. Light");
             Console.Write("Your choice: ");
 
             string sensorChoice = Console.ReadLine();
@@ -121,12 +99,26 @@ namespace The_investigation_game.Game
             switch (sensorChoice)
             {
                 case "1":
-                case "audioSensor":
                     return new AudioSensor();
 
                 case "2":
-                case "thermalSensor":
                     return new ThermalSensor();
+                    
+                case "3":
+                    return new PulseSensor();
+
+                case "4":
+                    return new MotionSensor();
+
+                case "5":
+                    return new MagneticSensor();
+
+                case "6":
+                    return new SignalSensor();
+
+                case "7":
+                    return new LightSensor();
+
 
                 default:
                     Console.WriteLine("Invalid selection. Press any key to try again...");
@@ -135,27 +127,29 @@ namespace The_investigation_game.Game
                     return CreateSensor(); 
             }
         }
-        private static JuniorAgent CreateAgent()
+        private static AgentBase CreateAgent()
         {
-            Console.WriteLine("Please choose a agent:");
-            Console.WriteLine("1 - junior agent");
-            Console.WriteLine("2 - else");
+            Console.WriteLine("Please choose an agent:\n1. Junior Agent\n2. Squad Leader\n3. Senior Commander\n4. Organization Leader");
             Console.Write("Your choice: ");
 
-            string sensorChoice = Console.ReadLine();
+            string agentChoice = Console.ReadLine();
             Console.WriteLine("Enter the name of the agent");
 
             string name = Console.ReadLine();
 
-            switch (sensorChoice)
+            switch (agentChoice)
             {
                 case "1":
-                case "juniorAgent":
                     return new JuniorAgent(name);
 
                 case "2":
-                case "thermalSensor":
-                    return new JuniorAgent(name);
+                    return new SquadLeader(name);
+
+                case "3":
+                    return new SeniorCommander(name);
+
+                case "4":
+                    return new OrganizationLeader(name);
 
                 default:
                     Console.WriteLine("Invalid selection. Press any key to try again...");

@@ -17,9 +17,10 @@ namespace The_investigation_game.Models.Sensors
         {
             Console.WriteLine($"The {Type} sensor with name  is activated.");
         }
-        public void PreventCounterattackTwoTimes(ICounterattacker agent)
+        public void PreventCounterattackTwoTimes(AgentBase agent)
         {
-            agent.IncreaseCounterattackThreshold(6);
+            if (agent is ICounterattacker counterattacker)
+                counterattacker.IncreaseCounterattackThreshold(6);
         }
 
     }

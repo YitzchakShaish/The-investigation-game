@@ -9,54 +9,86 @@ using The_investigation_game.Services;
 
 namespace The_investigation_game.Models.IranianAgents
 {
-    internal class OrganizationLeader : SquadLeader, ICounterattacker
+    internal class OrganizationLeader : AgentBase, ICounterattacker
     {
-        public override int MaxSecretWeaknesses { get; } = 8;
 
-        public OrganizationLeader(string name) : base(name)
+        public OrganizationLeader(string name, int maxSecretWeaknesses = 8) : base(name, maxSecretWeaknesses)
         {
         }
 
         protected int detectionCallCountOll = 0;
+        protected int counterattackThreshold = 3;
+        protected int detectionCallCount = 0;
 
 
-
-        public override void GetDetectionAccuracy()
+        public override List<ISensors> GetDetectionAccuracy()
         {
             if (detectionCallCount == counterattackThreshold)
             {
                 Counterattack();
             }
-            if (detectionCallCountOll>=10)
+            if (detectionCallCountOll >= 10)
             {
-                CounterattackOll();
+                CounterattackAll();
             }
             ++detectionCallCount;
             ++detectionCallCountOll;
-
-
             var copySecretWeaknesses = new List<SensorType>(SecretWeaknesses);
-            int counter = 0;
-            for (int i = 0; i < AttachedSensors.Count; i++)
+            List<ISensors> detectedSensors = new List<ISensors>();
+
+            for (int i = AttachedSensors.Count - 1; i >= 0; i--)
             {
-                for (int j = 0; j < copySecretWeaknesses.Count; j++)
+                AttachedSensors[i].Activate();
+                for (int j = 0; j < copySecretWeaknesses.Count(); j++)
                 {
                     if (AttachedSensors[i].Type == copySecretWeaknesses[j])
                     {
-                        AttachedSensors[i].Activate();
-                        copySecretWeaknesses.Remove(copySecretWeaknesses[j]);
-                        counter++;
+                        detectedSensors.Add(AttachedSensors[i]);
+                        copySecretWeaknesses.RemoveAt(j);
+                        break;
+                    }
+                    if (AttachedSensors[i].Type == copySecretWeaknesses[j])
+                    {
+                        detectedSensors.Add(AttachedSensors[i]);
+                        copySecretWeaknesses.RemoveAt(j);
                         break;
                     }
                 }
             }
-            Console.WriteLine($"Detected agent: {SecretWeaknesses.Count - copySecretWeaknesses.Count} out of {SecretWeaknesses.Count} sensors.");
+            if (copySecretWeaknesses.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("All weaknesses detected! You win!");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine($"secretWeaknesses{SecretWeaknesses.Count()} copySecretWeaknesses: {copySecretWeaknesses.Count()} secretWeaknesses: {SecretWeaknesses.Count()} .");
+
+            Console.WriteLine($"Detected agent: {SecretWeaknesses.Count() - copySecretWeaknesses.Count()} out of {SecretWeaknesses.Count()} sensors.");
+            return detectedSensors;
         }
 
-        public void CounterattackOll()
+        public void CounterattackAll()
         {
             AttachedSensors = new List<ISensors>();
             SensorType[] SecretWeaknessesOptions = (SensorType[])Enum.GetValues(typeof(SensorType));
+            SecretWeaknesses = new List<SensorType>();
+            for (int i = 0; i < MaxSecretWeaknesses; i++)
+            {
+                SecretWeaknesses.Add(SecretWeaknessesOptions[RandomGenerator.GetRandomNumber(SecretWeaknessesOptions.Length)]);
+            }
+            Console.WriteLine($"Secret Weaknesses for {Name}: {string.Join(", ", SecretWeaknesses)}");
+
+        }
+
+        public void Counterattack()
+        {
+            int index = RandomGenerator.GetRandomNumber(AttachedSensors.Count);
+            AttachedSensors.RemoveAt(index);
+        }
+        public void IncreaseCounterattackThreshold(int amount)
+        {
+            counterattackThreshold += amount;
         }
     }
 }

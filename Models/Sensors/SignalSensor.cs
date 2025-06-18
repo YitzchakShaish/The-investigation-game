@@ -19,10 +19,10 @@ namespace The_investigation_game.Models.Sensors
             Console.WriteLine($"The {Type} sensor with name  is activated.");
         }
 
-        public string Reveal(JuniorAgent agent)
+        public string Reveal(AgentBase agent)
         {
-            string[] information = {$"Hey, I found out something about the agent. His name is: {agent.Name}",
-             $"Hey, I found out something about the agent. He is affiliated with the organization: {agent.TerrorAffiliation.ToString()}" };
+            string[] information = {$"Hey, I found out something about the agent. His name is: {agent.GetName}",
+             $"Hey, I found out something about the agent. He is affiliated with the organization: {agent.GetTerrorAffiliation}" };
            return information[RandomGenerator.GetRandomNumber(information.Length)];
         }
     }

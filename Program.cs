@@ -14,18 +14,9 @@ namespace The_investigation_game
     {
         static void Main(string[] args)
         {
-            //ISensors s = new AudioSensor();
-            //ISensors s2 = new ThermalSensor();
-
-            //JuniorAgent achmad = new JuniorAgent();
-            //achmad.AddSecretWeakness(SensorType.Audio);
-            //achmad.AddSecretWeakness(SensorType.Audio);
-            //achmad.AddAttachedSensors(s);
-            //achmad.AddAttachedSensors(s);
-
-            //achmad.GetDetectionAccuracy();
-            MainMenu.Show();
-
+            
+            GameUI.Show();
+           
         }
     }
 }

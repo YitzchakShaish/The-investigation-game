@@ -38,7 +38,6 @@ namespace The_investigation_game.Models.IranianAgents
             }
             Console.WriteLine($"Secret Weaknesses for {Name}: {string.Join(", ", SecretWeaknesses)}");
 
-            AttachedSensors = new List<ISensors>();
 
         }
 
@@ -57,6 +56,8 @@ namespace The_investigation_game.Models.IranianAgents
         public virtual void AddAttachedSensors(ISensors sensor)
         {
             AttachedSensors.Add(sensor);
+            Console.WriteLine($"[DEBUG] All attached sensors now: {string.Join(", ", AttachedSensors.Select(s => s.Type))}");
+
             Console.WriteLine($"Sensor: {sensor.Type.ToString()} was added");
         }
 
@@ -80,20 +81,18 @@ namespace The_investigation_game.Models.IranianAgents
 
         public virtual List<ISensors> GetDetectionAccuracy()
         {
+            Console.WriteLine("Attached sensors: " + string.Join(", ", AttachedSensors.Select(s => s.Type)));
+
             var copySecretWeaknesses = new List<SensorType>(SecretWeaknesses);
             List<ISensors> detectedSensors = new List<ISensors>();
 
-            for (int i = AttachedSensors.Count - 1; i >= 0; i--)
+            for (int i =  0; i < AttachedSensors.Count; i++)
             {
-                AttachedSensors[i].Activate();
+                
 
-                for (int j = 0; j < copySecretWeaknesses.Count(); j++)
+                for (int j = 0; j < copySecretWeaknesses.Count; j++)
                 {
-                    if (AttachedSensors[i] is IBreakableSensor breakableSensor && breakableSensor.CheckBreakCondition())
-                    {
-                        AttachedSensors.RemoveAt(i);
-                        break;
-                    }
+                   
                     if (AttachedSensors[i].Type == copySecretWeaknesses[j])
                     {
                         detectedSensors.Add(AttachedSensors[i]);

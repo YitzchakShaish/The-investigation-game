@@ -27,53 +27,18 @@ namespace The_investigation_game.Models.IranianAgents
 
         public override List<ISensors> GetDetectionAccuracy()
         {
-            Console.WriteLine("SquadLeader version");
-
-            if (detectionCallCount == counterattackThreshold)
-            {
-                Counterattack();
-            }
+   
             ++detectionCallCount;
+            return base.GetDetectionAccuracy();
 
-            var copySecretWeaknesses = new List<SensorType>(SecretWeaknesses);
-            List<ISensors> detectedSensors = new List<ISensors>();
-
-            for (int i = AttachedSensors.Count - 1; i >= 0; i--)
-            {
-                AttachedSensors[i].Activate();
-                for (int j = 0; j < copySecretWeaknesses.Count; j++)
-                {
-                    if (AttachedSensors[i] is IBreakableSensor breakableSensor && breakableSensor.CheckBreakCondition())
-                    {
-                        AttachedSensors.RemoveAt(i);
-                        break;
-                    }
-
-                    if (AttachedSensors[i].Type == copySecretWeaknesses[j])
-                    {
-                        detectedSensors.Add(AttachedSensors[i]);
-                        copySecretWeaknesses.RemoveAt(j);
-                        break;
-                    }
-                }
-            }
-            if (copySecretWeaknesses.Count == 0)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("All weaknesses detected! You win!");
-                Console.ResetColor();
-            }
-
-            Console.WriteLine($"secretWeaknesses{SecretWeaknesses.Count()} copySecretWeaknesses: {copySecretWeaknesses.Count()} secretWeaknesses: {SecretWeaknesses.Count()} .");
-
-            Console.WriteLine($"Detected agent: {SecretWeaknesses.Count() - copySecretWeaknesses.Count()} out of {SecretWeaknesses.Count()} sensors.");
-            return detectedSensors;
         }
-
         public void Counterattack()
         {
+            if (detectionCallCount == counterattackThreshold)
+            {
             int index = RandomGenerator.GetRandomNumber(AttachedSensors.Count);
             AttachedSensors.RemoveAt(index);
+            }
         }
         public void IncreaseCounterattackThreshold(int amount)
         {

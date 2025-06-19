@@ -25,7 +25,6 @@ namespace The_investigation_game.Game
                 PrintHeader("Game menu");
 
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Welcome to the Intelligence Simulation Game!");
                 Console.WriteLine("Please select an action: (0-2)");
                 Console.WriteLine("1. Create a new agent");
                 Console.WriteLine("2. Attach a sensor to agent");
@@ -50,19 +49,12 @@ namespace The_investigation_game.Game
                         else
                         {
                             ISensors sensor = CreateSensor();
-                            currentAgent.AddAttachedSensors(sensor);
-                            Console.WriteLine("Sensor attached.");
-                            List<ISensors> detectedSensors = InvestigationManager.EvaluateAgent(currentAgent);
-                            InvestigationManager.ActivateAllSensors(detectedSensors, currentAgent);
-                            InvestigationManager.ActivateAdvancedAgentAbilities(currentAgent);
-                           // currentAgent.GetDetectionAccuracy();
+                            InvestigationManager.ExecuteSensorInteractionPhase(currentAgent, sensor);
                         }
                         Console.WriteLine("\nPress any key to continue...");
                         Console.ReadKey();
 
                         break;
-
-
 
 
                     case "0":

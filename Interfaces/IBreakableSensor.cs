@@ -7,6 +7,7 @@ using The_investigation_game.Models.IranianAgents;
 
 namespace The_investigation_game.Interfaces
 {
+    //Special interface for sensors that break after several uses
     internal interface IBreakableSensor
     {
         int MaxActivations { get; }

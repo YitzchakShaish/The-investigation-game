@@ -49,7 +49,7 @@ namespace The_investigation_game
                 sensor.Activate();
             }
         }
-
+        //An example of implementing the division into interfaces, checking whether it has the special capabilities, and if so, activating them.
         public static void ActivateAdvancedAgentAbilities(AgentBase agent)
         {
             if (agent is ICounterattacker agentCounterattacker)
@@ -59,6 +59,7 @@ namespace The_investigation_game
                     agentOrganizationLeader.CounterattackAll();
             }
         }
+        //An example of implementing the division into interfaces, checking whether it has the special capabilities, and if so, activating them.
         public static List<ISensors> CheckAndRemoveBrokenSensors(List<ISensors> sensors)
         {
             for (int i = sensors.Count - 1; i >= 0; i--)

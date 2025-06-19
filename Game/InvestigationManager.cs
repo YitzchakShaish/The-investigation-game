@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using The_investigation_game.Interfaces;
 using The_investigation_game.Models.IranianAgents;
 using The_investigation_game.Models.Sensors;
@@ -24,7 +25,7 @@ namespace The_investigation_game
          
             return agent.GetDetectionAccuracy();
         }
-        public static void ActivateAllSensors(List<ISensors> attachedSensors, AgentBase agent)
+        public static void TriggerMatchingSensors(List<ISensors> attachedSensors, AgentBase agent)
         {
             foreach (var sensor in attachedSensors)
             {
@@ -41,6 +42,13 @@ namespace The_investigation_game
 
             }
         }
+        public static void ActivateAllSensors(List<ISensors> attachedSensors)
+        {
+            foreach (var sensor in attachedSensors)
+            {
+                sensor.Activate();
+            }
+        }
 
         public static void ActivateAdvancedAgentAbilities(AgentBase agent)
         {
@@ -50,6 +58,30 @@ namespace The_investigation_game
                 if (agentCounterattacker is OrganizationLeader agentOrganizationLeader)
                     agentOrganizationLeader.CounterattackAll();
             }
+        }
+        public static List<ISensors> CheckAndRemoveBrokenSensors(List<ISensors> sensors)
+        {
+            for (int i = sensors.Count - 1; i >= 0; i--)
+            {
+                if (sensors[i] is IBreakableSensor breakableSensor && breakableSensor.CheckBreakCondition())
+                {
+                    sensors.RemoveAt(i);
+
+                }
+            }
+            return sensors;
+        }
+        public static void ExecuteSensorInteractionPhase(AgentBase currentAgent, ISensors sensor)
+        {
+            currentAgent.AddAttachedSensors(sensor);
+           // Console.WriteLine($"Secret : {string.Join(", ", currentAgent.GetAttachedSensors())}");
+
+            List<ISensors> attachedSensors = currentAgent.GetAttachedSensors();
+            ActivateAllSensors(attachedSensors);
+            List<ISensors> detectedSensors = EvaluateAgent(currentAgent);
+            TriggerMatchingSensors(detectedSensors, currentAgent);
+            CheckAndRemoveBrokenSensors(attachedSensors);
+            ActivateAdvancedAgentAbilities(currentAgent);
         }
 
     }

@@ -16,7 +16,7 @@ namespace The_investigation_game.Models.Sensors
 
         public void Activate()
         {
-            Console.WriteLine($"The {Type} sensor with name  is activated.");
+            Console.WriteLine($"The {Type} sensor is activated.");
         }
 
         public string Reveal(AgentBase agent)
